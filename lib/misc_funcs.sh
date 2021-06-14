@@ -149,7 +149,23 @@ function check_stack() {
   echo "${STACK}" > "${cache_path}/stack"
 }
 
+# remove any cache files that are not under the stack-based
+# cache directory specified by the `stack_based_cache_path`
+# function
+function clean_old_cache_files() {
+  rm -rf \
+    $(erlang_build_path) \
+    ${cache_path}/deps_backup \
+    ${cache_path}/build_backup \
+    ${cache_path}/.mix \
+    ${cache_path}/.hex
+  rm -rf ${cache_path}/OTP-*.zip
+  rm -rf ${cache_path}/elixir*.zip
+}
+
 function clean_cache() {
+  clean_old_cache_files
+
   if [ $always_rebuild = true ]; then
     output_section "Cleaning all cache to force rebuilds"
     $(clear_cached_files)
@@ -157,12 +173,7 @@ function clean_cache() {
 }
 
 function clear_cached_files() {
-  rm -rf \
-    $(erlang_build_path) \
-    $(deps_backup_path) \
-    $(build_backup_path) \
-    $(mix_backup_path) \
-    $(hex_backup_path)
+  rm -rf $(stack_based_cache_path)
 }
 
 function fix_erlang_version() {

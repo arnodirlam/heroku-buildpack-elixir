@@ -69,9 +69,9 @@ function app_dependencies() {
   cd $build_path
   output_section "Fetching app dependencies with mix"
 
+  # Unset GIT_DIR so that if the parent dir is a git repo, it isn't detected
+  # And all git operations are performed on the respective repos
   env \
-    # Unset this var so that if the parent dir is a git repo, it isn't detected
-    # And all git operations are performed on the respective repos
     -u GIT_DIR \
     MIX_HOME="$(build_mix_home_path)" \
     MIX_ARCHIVES="$(build_mix_archives_path)" \
